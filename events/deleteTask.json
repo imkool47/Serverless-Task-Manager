@@ -1,0 +1,4 @@
+{
+  "httpMethod": "DELETE",
+  "body": "{\"taskId\": \"YOUR-TASK-ID-HERE\"}"
+}

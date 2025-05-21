@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless Task Manager API using AWS SAM
+
+Globals:
+  Function:
+    Timeout: 10
+    Runtime: python3.11
+
+Resources:
+  TaskFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: hello_world.app.lambda_handler
+      CodeUri: hello_world/
+      Environment:
+        Variables:
+          TABLE_NAME: TaskTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: TaskTable
+      Events:
+        TaskApi:
+          Type: Api
+          Properties:
+            Path: /tasks
+            Method: ANY
+
+  TaskTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: TaskTable
+      AttributeDefinitions:
+        - AttributeName: taskId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: taskId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
